@@ -1,0 +1,7 @@
+# 03_variables.yml
+---
+adom: root
+device_sn: FGVM020000000000
+device_name: FG01
+vdom: root
+policy_package_name: default

@@ -1,0 +1,51 @@
+# 03_add_model_dev_with_PP_and_vars.yml
+---
+- name: Add model device to FMG and install Policy Package - Optimized with vars
+  hosts: fmg01
+  gather_facts: no
+  collections:
+    - fortinet.fortimanager
+  vars_files:
+    - 03_variables.yml
+
+  tasks:
+    - name: Add model device
+      fmgr_dvm_cmd_add_device:
+        loose_validation: true
+        method: exec
+        params:
+          - data:
+              adom: '{{ adom }}'
+              device:
+                device action: add_model
+                mgmt_mode: fmg
+                os_ver: 6
+                mr: 2
+                sn: '{{ device_sn }}'
+                name: '{{ device_name }}'
+
+    - name: Add policy package to model device
+      fmgr_pm_pkg_adom_obj:
+        loose_validation: true
+        method: set
+        url_params:
+          adom: '{{ adom }}'
+        params:
+          - data:
+              name: '{{ policy_package_name }}'
+              scope member:
+                - name: '{{ device_name }}'
+                  vdom: '{{ vdom }}'
+              type: pkg
+
+    - name: Install policy package to model device
+      fmgr_securityconsole_install_package:
+        loose_validation: true
+        method: exec
+        params:
+          - data:
+              adom: '{{ adom }}'
+              pkg: '{{ policy_package_name }}'
+              scope:
+                - name: '{{ device_name }}'
+                  vdom: '{{ vdom }}'
