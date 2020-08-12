@@ -1,0 +1,21 @@
+# 01_add_model_device.yml
+---
+- name: Add model device to FMG and install Policy Package
+  hosts: fmg01
+  collections:
+    - fortinet.fortimanager
+
+  tasks:
+    - name: Add model device
+      fmgr_dvm_cmd_add_device:
+        loose_validation: true
+        method: exec
+        params:
+          - data:
+              adom: root
+              device:
+                device action: add_model
+                mgmt_mode: fmg
+                os_ver: 6
+                mr: 2
+                sn: FGVM020000000000
