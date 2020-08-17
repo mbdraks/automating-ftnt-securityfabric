@@ -1,0 +1,12 @@
+#
+---
+- name: create the service object
+  fortinet.fortimanager.fmgr_firewall_service_custom:
+    method: set
+    url_params:
+        adom: '{{ adom }}'
+    params:
+        - data:
+            - name: '{{ item.service_name }}'
+              udp-portrange: '{{ item.service_port }}'
+  loop: '{{ service_list }}'

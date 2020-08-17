@@ -1,0 +1,37 @@
+#
+---
+- name: create profile
+  fortinet.fortimanager.fmgr_dnsfilter_profile:
+    method: add
+    url_params:
+        adom: '{{ adom }}'
+    params:
+      - data:
+        - name: '{{ item.dnsfilter_name }}'
+          block-action: 'redirect'
+  register: policyinfo
+  ignore_errors: true
+
+- name: handling rc -2 and catching errors
+  fail:
+    msg: "more info by :-vvvv"
+  failed_when: policyinfo.meta.status.code != 0 and policyinfo.meta.status.code != -2
+# "code": -2 / "message": "Object already exists"
+
+- name: set profile details
+  fortinet.fortimanager.fmgr_dnsfilter_profile_obj:
+    loose_validation: true # fgtd-dns is not on schema yet
+    method: update
+    url_params:
+        adom: '{{ adom }}'
+        profile: '{{ item.dnsfilter_name }}'
+    params:
+      - data:
+          ftgd-dns:
+            filters:
+              - category: 17
+                action: 3
+              - category: 20
+                action: 6
+  register: policyinfo
+  ignore_errors: true

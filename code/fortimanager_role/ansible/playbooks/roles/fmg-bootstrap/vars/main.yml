@@ -1,0 +1,49 @@
+#
+---
+# add_device / add_device_group
+device_list:
+  - device_name: FGT1
+    device_ip: '192.168.0.1'
+    group_name: Branch_Office
+    policy_package: Branches-PP
+
+  - device_name: FGT2
+    device_ip: '192.168.0.2'
+    group_name: Datacenter
+    policy_package: Datacenter-PP
+
+  - device_name: FGT3
+    device_ip: '192.168.0.3'
+    group_name: API
+    policy_package: Branches-PP
+
+address_list:
+  - address_name: address_object1
+    address_subnet: 22.33.44.55/32
+
+# still need to handle tcp/udp
+service_list:
+  - service_name: service_object1
+    service_port: 4018-5070
+
+firewall_policy_list:
+  - policy_package: Branches-PP
+    policy_name: policy_one
+    srcaddr_name: address_object1
+    dstaddr_name: address_object1
+    service_name: service_object1
+
+  - policy_package: Datacenter-PP
+    policy_name: Basic_IPv4_Policy
+    srcaddr_name: address_object1
+    dstaddr_name: address_object1
+    service_name: service_object1
+    dnsfilter_profile: custom_dns_filter
+    ips_sensor: custom_ips_profile
+
+# security profiles
+dnsfilter_list:
+  - dnsfilter_name: custom_dns_filter
+
+ips_profile_list:
+  - ips_profile_name: custom_ips_profile

@@ -1,0 +1,30 @@
+#
+---
+- name: create policy
+  fortinet.fortimanager.fmgr_pkg_firewall_policy:
+    method: 'set'
+    url_params:
+        adom: '{{ adom }}'
+        pkg: '{{ item.policy_package }}'
+    params:
+      - data:
+        - name: '{{ item.policy_name }}' 
+          action: 'accept'
+          srcintf: 'any'
+          dstintf: 'any'
+          srcaddr: '{{ item.srcaddr_name }}'
+          dstaddr: '{{ item.dstaddr_name }}'
+          service: '{{ item.service_name }}'
+          schedule: '{{ schedule_name }}'
+          dnsfilter-profile: "{{ item.dnsfilter_profile | default(omit) }}"
+          ips-sensor: "{{ item.ips_profile_name | default(omit) }}"
+
+  register: policyinfo
+  # this api is special, it reports error code -9998 if the policy is present
+  # but it's absolutely not an error
+  ignore_errors: true
+
+- name: detect error in case policy is duplicated
+  fail:
+    msg: "more info by :-vvvv"
+  failed_when: policyinfo.meta.status.code != 0 and policyinfo.meta.status.code != -9998

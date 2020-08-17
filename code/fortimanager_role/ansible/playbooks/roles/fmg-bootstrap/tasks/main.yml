@@ -1,0 +1,36 @@
+# tasks/main.yml
+---
+- name: add devices from list
+  include_tasks: add_device.yml
+  loop: '{{ device_list }}'
+
+# device group
+- include_tasks: add_device_group.yml
+- include_tasks: add_device_to_device_group_generic.yml
+
+# PP
+- include_tasks: create_policy_package.yml
+
+- name: associate_policy_package
+  include_tasks: update_policy_package_members.yml
+  loop: '{{ device_list }}'
+
+# objects & policy
+- include_tasks: create_firewall_addr.yml
+- include_tasks: create_firewall_service.yml
+
+- name: create_firewall_policy
+  include_tasks: create_firewall_policy.yml
+  loop: '{{ firewall_policy_list }}'
+
+- name: create_dnsfilter_profile
+  include_tasks: create_dnsfilter_profile.yml
+  loop: '{{ dnsfilter_list }}'
+
+- name: create_ips_profile
+  include_tasks: create_ips_profile.yml
+
+# apply PP
+- name: install_policy_package
+  include_tasks: install_policy_package.yml
+  loop: '{{ device_list }}'

@@ -1,0 +1,7 @@
+version: '3'
+services:
+  ansible:
+    build: .
+    image: ansible:1.0
+    volumes:
+    - ./ansible:/ansible

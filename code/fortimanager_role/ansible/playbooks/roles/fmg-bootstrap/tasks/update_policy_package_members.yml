@@ -1,0 +1,32 @@
+#
+---
+- name: initialize empty list
+  set_fact:
+    pp_install_target_list: []
+
+- name: get current pp scope members
+  fortinet.fortimanager.fmgr_pm_pkg_obj:
+    method: get
+    url_params:
+        adom: '{{ adom }}'
+        pkg_path: '{{ item.policy_package }}'
+  register: results
+
+- name: register list with existing pp members
+  set_fact:
+    pp_install_target_list: "{{ results.meta.data['scope member'] }}"
+  when: results.meta.data['scope member'] is defined
+
+- name: append member to list
+  set_fact:
+    pp_install_target_list: "{{ pp_install_target_list + [ { 'name': item.device_name, 'vdom': vdom } ]}}"
+
+- name: update policy package scope members
+  fortinet.fortimanager.fmgr_pm_pkg_adom_obj:
+    method: set
+    url_params:
+        adom: '{{ adom }}'
+    params:
+        - data:
+            - name: '{{ item.policy_package }}'
+              scope member: '{{ pp_install_target_list }}'
