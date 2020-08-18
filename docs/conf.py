@@ -25,4 +25,4 @@ master_doc = "index"
 # Custom
 
 # Icon made by https://www.flaticon.com/authors/freepik
-# html_logo = "_static/img/logo.svg"
+html_logo = "_static/img/logo.svg"
