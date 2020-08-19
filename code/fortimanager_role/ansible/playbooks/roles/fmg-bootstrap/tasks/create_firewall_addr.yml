@@ -1,0 +1,14 @@
+#
+---
+- name: Create firewall address object
+  fortinet.fortimanager.fmgr_firewall_address:
+    method: 'set'
+    url_params:
+        adom: '{{ adom }}'
+    params:
+      - data:
+          - name: '{{ item.address_name }}'
+            type: "ipmask"
+            visibility: "enable"
+            subnet: '{{ item.address_subnet }}'
+  loop: '{{ address_list }}'

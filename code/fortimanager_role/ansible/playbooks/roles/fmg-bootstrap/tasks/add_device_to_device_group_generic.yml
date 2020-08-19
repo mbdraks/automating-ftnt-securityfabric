@@ -1,0 +1,11 @@
+#
+---
+- name: set device group members
+  fmgr_generic:
+    method: set
+    params:
+      - url: /dvmdb/adom/{{ adom }}/group/{{ item.group_name }}/object member
+        data:
+          - name: '{{ item.device_name }}'
+            vdom: '{{ vdom }}'
+  loop: '{{ device_list }}'

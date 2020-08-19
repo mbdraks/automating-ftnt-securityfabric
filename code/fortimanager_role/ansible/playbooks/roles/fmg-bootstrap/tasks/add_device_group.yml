@@ -1,0 +1,11 @@
+#
+---
+- name: add device group
+  fortinet.fortimanager.fmgr_dvmdb_group:
+    method: add
+    url_params:
+      adom: '{{ adom }}'
+    params:
+      - data:
+          - name: '{{ item.group_name }}'
+  loop: '{{ device_list }}'

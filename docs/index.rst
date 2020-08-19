@@ -8,7 +8,7 @@ Automation Guide to Fortinet Security Fabric
    quickstart
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Ansible
 
    getting_started_fortios

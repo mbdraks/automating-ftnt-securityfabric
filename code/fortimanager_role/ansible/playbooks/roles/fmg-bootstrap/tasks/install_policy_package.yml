@@ -1,0 +1,28 @@
+#
+---
+- name: install the package
+  fortinet.fortimanager.fmgr_securityconsole_install_package:
+    method: exec
+    params:
+      - data:
+          adom: '{{ adom }}'
+          pkg: '{{ item.policy_package }}'
+          scope:
+            - name: '{{ item.device_name }}'
+              vdom: '{{ vdom }}'
+  register: installing_task
+
+- name: poll and wait for the task to complete
+  fortinet.fortimanager.fmgr_task_task_obj:
+    method: get
+    url_params:
+        task: '{{ installing_task.meta.data.task }}'
+  register: taskinfo
+  until: taskinfo.meta.data.percent == 100
+  retries: 30
+  delay: 3
+
+- name: Detect errors in the final task
+  fail:
+    msg: 'see more by : -vvv'
+  failed_when: taskinfo.meta.data.state == 'error'

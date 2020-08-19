@@ -1,0 +1,14 @@
+#
+---
+adom: root
+vdom: root
+policy_package_name: default
+os_ver_major: 6
+os_ver_minor: 2
+
+# FG credentials
+fg_user: admin
+fg_pass: ''
+
+# create_firewall_policy
+schedule_name: always

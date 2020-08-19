@@ -1,0 +1,12 @@
+#
+---
+- name: add policy package
+  fortinet.fortimanager.fmgr_pm_pkg_adom_obj:
+    method: add
+    url_params:
+        adom: '{{ adom }}'
+    params:
+        - data:
+            - name: '{{ item.policy_package }}'
+              type: pkg
+  loop: '{{ device_list }}'

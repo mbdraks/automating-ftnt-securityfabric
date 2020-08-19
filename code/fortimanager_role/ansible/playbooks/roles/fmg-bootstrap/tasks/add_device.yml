@@ -1,0 +1,63 @@
+#
+---
+- name: Discover device
+  fortinet.fortimanager.fmgr_dvm_cmd_discover_device:
+    method: exec
+    params:
+      - data:
+          device:
+            adm_usr: '{{ item.fg_user | default(fg_user) }}'
+            adm_pass: '{{ item.fg_pass | default(fg_pass) }}'
+            ip: '{{ item.device_ip }}'
+  register: result
+
+- name: Add device
+  fortinet.fortimanager.fmgr_dvm_cmd_add_device:
+    loose_validation: true # required due to 6.2
+    method: exec
+    params:
+      - data:
+          adom: '{{ adom }}'
+          device:
+            adm_usr: '{{ item.fg_user | default(fg_user) }}'
+            adm_pass: '{{ item.fg_pass | default(fg_pass) }}'
+            ip: '{{ item.device_ip }}'
+            name: '{{ item.device_name }}'
+            mgmt_mode: fmg
+            sn: '{{ result.meta.data.device.sn }}'
+          flags:
+              - create_task
+              - nonblocking
+  register: installing_task
+
+- name: query long-term task status
+  fortinet.fortimanager.fmgr_task_task_obj:
+    method: get
+    url_params:
+        task: "{{ installing_task.meta.data.taskid }}"
+  register: taskinfo
+  until: taskinfo.meta.data.percent == 100
+  # poll for 30 * 10 = 300 seconds.
+  retries: 30
+  delay: 10
+
+
+# if query task is not used it can lead to this error due to timeout:
+
+# Traceback (most recent call last):
+#   File "/root/.ansible/tmp/ansible-local-3828ckgvd40u/ansible-tmp-1597342626.9736748-3875-19826767949616/AnsiballZ_fmgr_dvm_cmd_add_device.py", line 102, in <module>
+#     _ansiballz_main()
+#   File "/root/.ansible/tmp/ansible-local-3828ckgvd40u/ansible-tmp-1597342626.9736748-3875-19826767949616/AnsiballZ_fmgr_dvm_cmd_add_device.py", line 94, in _ansiballz_main
+#     invoke_module(zipped_mod, temp_path, ANSIBALLZ_PARAMS)
+#   File "/root/.ansible/tmp/ansible-local-3828ckgvd40u/ansible-tmp-1597342626.9736748-3875-19826767949616/AnsiballZ_fmgr_dvm_cmd_add_device.py", line 40, in invoke_module
+#     runpy.run_module(mod_name='ansible_collections.fortinet.fortimanager.plugins.modules.fmgr_dvm_cmd_add_device', init_globals=None, run_name='__main__', alter_sys=True)
+#   File "/usr/lib/python3.7/runpy.py", line 205, in run_module
+#     return _run_module_code(code, init_globals, run_name, mod_spec)
+#   File "/usr/lib/python3.7/runpy.py", line 96, in _run_module_code
+#     mod_name, mod_spec, pkg_name, script_name)
+#   File "/usr/lib/python3.7/runpy.py", line 85, in _run_code
+#     exec(code, run_globals)
+#   File "/tmp/ansible_fortinet.fortimanager.fmgr_dvm_cmd_add_device_payload_4h897igx/ansible_fortinet.fortimanager.fmgr_dvm_cmd_add_device_payload.zip/ansible_collections/fortinet/fortimanager/plugins/modules/fmgr_dvm_cmd_add_device.py", line 362, in <module>
+#   File "/tmp/ansible_fortinet.fortimanager.fmgr_dvm_cmd_add_device_payload_4h897igx/ansible_fortinet.fortimanager.fmgr_dvm_cmd_add_device_payload.zip/ansible_collections/fortinet/fortimanager/plugins/modules/fmgr_dvm_cmd_add_device.py", line 356, in main
+# ansible_collections.fortinet.fortimanager.plugins.module_utils.common.FMGBaseException: command timeout triggered, timeout value is 30 secs.
+# See the timeout setting options in the Network Debug and Troubleshooting Guide.

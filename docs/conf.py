@@ -10,6 +10,7 @@ import sphinx_rtd_theme
 
 extensions = [
     "sphinx_rtd_theme",
+    "sphinxcontrib.images",
 ]
 
 html_theme = "sphinx_rtd_theme"
@@ -25,4 +26,10 @@ master_doc = "index"
 # Custom
 
 # Icon made by https://www.flaticon.com/authors/freepik
-# html_logo = "_static/img/logo.svg"
+html_logo = "_static/img/logo.svg"
+
+# sphinxcontrib.images
+# create lightbox for standard image directive
+images_config = {
+    "override_image_directive": True,
+}

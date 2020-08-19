@@ -1,0 +1,10 @@
+---
+- name: create profile
+  fortinet.fortimanager.fmgr_ips_sensor:
+    method: add
+    url_params:
+        adom: '{{ adom }}'
+    params:
+      - data:
+        - name: '{{ item.ips_profile_name }}'
+  loop: '{{ ips_profile_list }}'
