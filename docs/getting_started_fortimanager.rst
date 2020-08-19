@@ -25,7 +25,7 @@ After we have an automated container build we will explore how to
 interact with the FortiManager modules, create a new model device,
 associate a policy package and install it.
 
-Versions
+Versions & Source
 ************************************************************************
 
 .. list-table::
@@ -43,6 +43,8 @@ Versions
      - 1.0.3
 
 `Last updated: 2020-08-12`
+
+- `Source <https://github.com/mbdraks/automating-ftnt-securityfabric/tree/master/code/getting_started_fortimanager>`_
 
 Recipe
 ************************************************************************
@@ -99,7 +101,9 @@ After you have those two files created execute the following command:
 
     Successfully built 3e3ad52d93fe
     Successfully tagged ansible:1.0
-    WARNING: Image for service ansible was built because it did not already exist. To rebuild this image you must use `docker-compose build` or `docker-compose up --build`.
+    WARNING: Image for service ansible was built because it did not 
+    already exist. To rebuild this image you must use 
+    `docker-compose build` or `docker-compose up --build`.
     root@69bdab627c69:/ansible#
 
 This will trigger the base image download, custom image creation (with
@@ -114,7 +118,7 @@ correctly installed by checking the documentation:
 
 .. code-block:: console
     
-    ansible-doc fortinet.fortimanager.fmgr_dvm_cmd_add_device
+   $ ansible-doc fortinet.fortimanager.fmgr_dvm_cmd_add_device
 
 
 2. Create an inventory and playbook file for adding a new model device
@@ -157,10 +161,10 @@ Lines 3-8 should be familiar, except line 5. Disabling the gather_facts
 is useful to speed up the playbook execution.
 
 This task is to add a new device model (a template of a device, this is
-useful for [Zero Touch
-Provisioning](https://docs.fortinet.com/document/fortigate/6.2.0/cookbook/861490/zero-touch-provisioning-with-fortimanager)
-use cases), we can read the [module
-documentation](https://ansible-galaxy-fortimanager-docs.readthedocs.io/en/galaxy-1.0.3/docgen/fmgr_dvm_cmd_add_device.html)
+useful for `Zero Touch
+Provisioning <https://docs.fortinet.com/document/fortigate/6.2.0/cookbook/861490/zero-touch-provisioning-with-fortimanager>`_
+use cases), we can read the `module
+documentation <https://ansible-galaxy-fortimanager-docs.readthedocs.io/en/galaxy-1.0.3/docgen/fmgr_dvm_cmd_add_device.html>`_
 and based on those parameters we create the playbook.
 
 Line 13 is required because we're not bypassing the module constraints
@@ -190,18 +194,18 @@ At this point you're ready to run your first playbook against FortiManager:
 
     root@c02f4307c0d2:/ansible# ansible-playbook playbooks/01_add_model_device.yml 
 
-    PLAY [Add model device to FMG and install Policy Package] ****************************************************************************************************************
+    PLAY [Add model device to FMG and install Policy Package] ********************************************************
 
-    TASK [Add model device] **************************************************************************************************************************************************
+    TASK [Add model device] ******************************************************************************************
     changed: [fmg01]
 
-    PLAY RECAP ***************************************************************************************************************************************************************
+    PLAY RECAP *******************************************************************************************************
     fmg01                      : ok=1    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 
 
 If you inspect your FMG at this point you should see a new managed device. Yay!
 
-[IMAGE]
+.. image:: _static/img/getting_started_fortimanager/01_new_managed_device.png
 
 
 But it's not sufficient to only have the device without being able to
@@ -226,27 +230,26 @@ the results.
 
     root@c02f4307c0d2:/ansible# ansible-playbook playbooks/02_install_policy_package_to_device.yml 
 
-    PLAY [Add model device to FMG and install Policy Package] ****************************************************************************************************************
+    PLAY [Add model device to FMG and install Policy Package] ********************************************************
 
-    TASK [Add policy package to model device] ********************************************************************************************************************************
+    TASK [Add policy package to model device] ************************************************************************
     changed: [fmg01]
 
-    TASK [Install policy package to model device] ****************************************************************************************************************************
+    TASK [Install policy package to model device] ********************************************************************
     changed: [fmg01]
 
-    PLAY RECAP ***************************************************************************************************************************************************************
+    PLAY RECAP *******************************************************************************************************
     fmg01                      : ok=2    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 
 
 
 Policy Package ``default`` associated to device model.
 
-
-IMAGE
+.. image:: _static/img/getting_started_fortimanager/02_pp_associated.png
 
 Policy Package correctly installed on device.
 
-IMAGE
+.. image:: _static/img/getting_started_fortimanager/03_pp_installed.png
 
 
 4. Refactor the playbooks
@@ -282,24 +285,24 @@ Delete the existing device on FMG and run the new playbook:
 
     root@c02f4307c0d2:/ansible# ansible-playbook playbooks/03_add_model_dev_with_PP_and_vars.yml 
 
-    PLAY [Add model device to FMG and install Policy Package - Optimized with vars] ******************************************************************************************
+    PLAY [Add model device to FMG and install Policy Package - Optimized with vars] **********************************
 
-    TASK [Add model device] **************************************************************************************************************************************************
+    TASK [Add model device] ******************************************************************************************
     changed: [fmg01]
 
-    TASK [Add policy package to model device] ********************************************************************************************************************************
+    TASK [Add policy package to model device] ************************************************************************
     changed: [fmg01]
 
-    TASK [Install policy package to model device] ****************************************************************************************************************************
+    TASK [Install policy package to model device] ********************************************************************
     changed: [fmg01]
 
-    PLAY RECAP ***************************************************************************************************************************************************************
+    PLAY RECAP *******************************************************************************************************
     fmg01                      : ok=3    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 
 
 And the final result on FMG:
 
-IMAGE
+.. image:: _static/img/getting_started_fortimanager/03_pp_installed.png
 
 Feel free to explore other FortiManager modules, you just created an
 automated build process for the ansible control node and optimized
@@ -309,5 +312,5 @@ FortiManager.
 References
 ************************************************************************
 
-- https://docs.docker.com/engine/reference/builder/
-- https://docs.docker.com/compose/gettingstarted/
+- `Dockerfile <https://docs.docker.com/engine/reference/builder/>`_
+- `Docker Compose <https://docs.docker.com/compose/gettingstarted/>`_
