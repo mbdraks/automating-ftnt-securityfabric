@@ -152,6 +152,7 @@ Here's the playbook, create it on a new /ansible/playbook subfolder:
 
 .. literalinclude:: ../code/getting_started_fortimanager/ansible/playbooks/01_add_model_device.yml
    :language: YAML
+   :linenos:
    :caption: 01_add_model_device.yml
 
 Line 1 is just a comment which in this case is the same as the filename,
@@ -217,6 +218,7 @@ playbook to execute those tasks.
 
 .. literalinclude:: ../code/getting_started_fortimanager/ansible/playbooks/02_install_policy_package_to_device.yml
    :language: YAML
+   :linenos:
    :caption: 02_install_policy_package_to_device.yml
 
 Notice that each task has it's specific module, understand the API
@@ -267,6 +269,7 @@ Create this new file:
 
 .. literalinclude:: ../code/getting_started_fortimanager/ansible/playbooks/03_add_model_dev_with_PP_and_vars.yml
    :language: YAML
+   :linenos:
    :caption: 03_add_model_dev_with_PP_and_vars.yml
 
 In this new file we are consolidating the add device and install policy
@@ -277,6 +280,7 @@ Create the variables file:
 
 .. literalinclude:: ../code/getting_started_fortimanager/ansible/playbooks/03_variables.yml
    :language: YAML
+   :linenos:
    :caption: 03_variables.yml
 
 Delete the existing device on FMG and run the new playbook:
